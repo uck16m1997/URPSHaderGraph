@@ -1,4 +1,6 @@
 # Computer Graphics Concepts
+## Resources
+- https://learnopengl.com/Introduction
 
 ## Color
 - RGB with additive color model https://en.wikipedia.org/wiki/Additive_color.
@@ -55,6 +57,32 @@
 
 ## Coordinate Spaces
 - Worldspace is the axis of x,y,z that is used to describe the world and is independent to anything.
-- Objectspace have its own front,left and up which will change with object rotations.
-- Viewspace is the front(z),left and up if the camera rotations it will change the views.
-- Tangentspace has vertex becoming the center of the space and vertices have normal(perpendicular,z) and tangent(side,x), binormal(up,y) which will change with the rotation of the object it belongs to.
+- Objectspace have its own front,left and up which will change with object rotates.
+- Viewspace is the front/depth(z),left(x) and up(y) if the camera rotates it will change the viewspace locations.
+- Tangentspace has vertex becoming the center of the space and vertices have normal(perpendicular,z,n) and tangent(side,x,u), binormal(up,y,v) which will change with the rotation of the object it belongs to.
+
+
+## Render Pipelines
+- HDRP targets high end hardware with the purpose of produce the highest quality video on the screen with Ray Tracing lighting functionalities. HDRP rendering pipeline might lock more CPU and GPU and not leave enough for scripting intensive games.
+- URP targets broader end devices https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/index.html.
+- Bent Normals (included in HDRP) are special version of Normal Map with Ambient Occlusion built in.
+- https://portal.productboard.com/unity/1-unity-platform-rendering-visual-effects/tabs/3-universal-render-pipeline
+## Rasterization Pipeline
+
+1. 3D Model: Contains vertices, normals, uvs, tangents.
+2. Vertex Processing: Computes normalised coordinate space of the vertices
+3. Primitive Processing: Vertices are grouped in primitives like triangles and triangles are clipped and culled
+4. Rasterization: Triangles are filled in to produce fragments
+5. Fragment Processing: Fragments are coloured
+6. Depth & Colour Buffer Processsing: Reads from buffer and outputs image in pixels
+
+- In Forward Rendering each models mesh gets passed to Depth & Colour buffers and get compared before pixels get rendered to screen.
+- In Deferred Rendering Fragment Processing won't apply lighting when colouring each fragment will go to G-Buffer.
+- G-Buffer contains Depth,Normal and Color Maps and final Fragment Pass happens to colour lighting on only visible pixels by comparing their depth.
+- Older video cards and semi-transparent objects don't support Deffered Rendering.
+- Anti aliasing isn't naturally supported in Deffered Rendering and used as FXAA.
+- Any object that isn't supported by Deffered can be drawn afterwards with Forward.
+- <b>Forward Renderer Draw Call count:</b>  number_of_meshes * number_of_lights* number_of_views.
+- <b>Deffererd Renderer Draw Call count:</b> number_of_meshes + number_of_lights* number_of_views.
+- https://docs.unity3d.com/Manual/RenderTech-ForwardRendering.html
+- https://docs.unity3d.com/Manual/RenderTech-DeferredShading.html
